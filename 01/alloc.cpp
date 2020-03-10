@@ -2,28 +2,27 @@
 #include <stdint.h>
 #include <assert.h>
 #include <stdlib.h>
-using namespace std;
+#include <new>
 
 char* data = nullptr;
-size_t SizeOfArray = 0;
+size_t maxSize = 0;
 char *beg = 0;
 
 void makeAllocator(size_t maxSize)
 {
     try{
 	    beg = data = new char[maxSize];
-	    SizeOfArray = maxSize;}
+	    ::maxSize = maxSize;}
 	
-    catch(...) {
-        printf("Allocation error\n");
-        exit(1);
-    }
+    catch (std::bad_alloc const&) {
+        beg = data = nullptr;
+        ::maxSize = 0;}
 
 }
 
 char* alloc(size_t size)
 {
-    if (data + size <= beg + SizeOfArray) {
+    if (data + size <= beg + maxSize) {
         char *res_ptr = data;
         data += size;
         return res_ptr;
