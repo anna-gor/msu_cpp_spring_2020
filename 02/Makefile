@@ -1,12 +1,12 @@
 CC=g++ -std=c++14
   
-all: test
+all: parse
 
-parser: test.cpp parser.cpp parser.h
-	$(CC) -o parser test.cpp parser.cpp  
+parse: test.cpp parser.cpp parser.h
+	$(CC) -o parse test.cpp parser.cpp  
  
-test: parser  
-	./parser
+test: parse  
+	./parse
 	 
   
 clean:  
