@@ -1,10 +1,16 @@
 #include "parser.h"
-#include <stdio.h>
-#include <assert.h>
-#include <iostream>
-#include <stdint.h>
-#include <cstring>
-#include <string> 
+
+using namespace std;
+
+using Number = void (*)(int token);
+using String = void (*)(const string& token);
+using BeginOrEnd = void (*)();
+
+void register_on_number_callback(Number callback);
+void register_on_string_callback(String callback);
+void register_on_start(BeginOrEnd callback);
+void register_on_stop(BeginOrEnd callback);
+void parser(const string& text);
 
 using namespace std;
 static string numbers = "";
@@ -18,14 +24,14 @@ void reset()
 
 void Callback_on_number(int str)
 {
-    numbers+=std::to_string(str);
-    numbers+=' ';
+    numbers += std::to_string(str);
+    numbers += ' ';
 }
 
 void Callback_on_string(const string& str)
 {
-    strings+=str;
-    strings+=' ';    
+    strings += str;
+    strings += ' ';
 }
 
 void Callback_on_beginning()
@@ -39,7 +45,8 @@ void Callback_on_end()
     printf("Parsing finished successfully\n");
 }
 
-int main(){
+int main()
+{
     register_on_string_callback(Callback_on_string);
     register_on_number_callback(Callback_on_number);
     register_on_start(Callback_on_beginning);
@@ -64,6 +71,6 @@ int main(){
     parser("");
     assert(numbers == "" && strings == "");
     reset();
-    
+
     return 0;
 }

@@ -6,20 +6,7 @@
 #include <cstring>
 #include <string>
 #include <cstdlib>
-
-using namespace std;
-
-using Number = void (*)(int token);
-using String = void (*)(const string& token);
-using BeginOrEnd   = void (*)();
-
-
-void register_on_number_callback(Number callback);
-void register_on_string_callback(String callback);
-void register_on_start(BeginOrEnd  callback);
-void register_on_stop(BeginOrEnd  callback);
-void parser(const string& text);
-
-
+#include <assert.h>
+#include <string.h>
 
 
