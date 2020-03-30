@@ -1,21 +1,23 @@
 #include "parser.h"
-
+#include <stdio.h>
+#include <stdint.h>
+#include <iostream>
+#include <ctype.h>
+#include <cstring>
+#include <cstdlib>
+#include <assert.h>
+#include <string.h>
 using namespace std;
 
-using Number = void (*)(int token);
 using String = void (*)(const string& token);
-using BeginOrEnd = void (*)();
-
-void register_on_number_callback(Number callback);
-void register_on_string_callback(String callback);
-void register_on_start(BeginOrEnd callback);
-void register_on_stop(BeginOrEnd callback);
-void parser(const string& text);
 
 Number callback_on_number;
 String callback_on_string;
 BeginOrEnd callback_begin;
 BeginOrEnd callback_end;
+
+void parser(const string& text);
+void register_on_string_callback(String callback);
 
 bool is_number(const std::string& s)
 {
@@ -52,7 +54,7 @@ void parser(const string& text)
     if (!callback_begin || !callback_end || !callback_on_string || !callback_on_number)
         return;
     callback_begin();
-    for (int i = 0; i < text.size(); ++i) {
+    for (size_t i = 0; i < text.length(); ++i) {
         while (text[i] == '\n' || text[i] == '\t' || text[i] == ' ') {
             ++i;
         }

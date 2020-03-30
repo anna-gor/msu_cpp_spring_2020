@@ -1,20 +1,20 @@
 #include "parser.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <iostream>
+#include <ctype.h>
+#include <cstring>
+#include <cstdlib>
+#include <assert.h>
+#include <string.h>
 
 using namespace std;
-
-using Number = void (*)(int token);
 using String = void (*)(const string& token);
-using BeginOrEnd = void (*)();
 
-void register_on_number_callback(Number callback);
-void register_on_string_callback(String callback);
-void register_on_start(BeginOrEnd callback);
-void register_on_stop(BeginOrEnd callback);
-void parser(const string& text);
-
-using namespace std;
 static string numbers = "";
 static string strings = "";
+void register_on_string_callback(String callback);
+void parser(const string& text);
 
 void reset()
 {

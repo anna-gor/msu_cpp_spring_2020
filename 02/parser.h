@@ -4,9 +4,14 @@
 #include <iostream>
 #include <ctype.h>
 #include <cstring>
-#include <string>
 #include <cstdlib>
-#include <assert.h>
-#include <string.h>
 
+
+using Number = void (*)(int token);
+using BeginOrEnd   = void (*)();
+
+
+void register_on_number_callback(Number callback);
+void register_on_start(BeginOrEnd  callback);
+void register_on_stop(BeginOrEnd  callback);
 
