@@ -1,20 +1,9 @@
 #include "parser.h"
-#include <stdio.h>
-#include <stdint.h>
-#include <iostream>
-#include <ctype.h>
-#include <cstring>
-#include <cstdlib>
 #include <assert.h>
-#include <string.h>
 
 using namespace std;
-using String = void (*)(const string& token);
-
 static string numbers = "";
 static string strings = "";
-void register_on_string_callback(String callback);
-void parser(const string& text);
 
 void reset()
 {
