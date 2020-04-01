@@ -29,7 +29,7 @@ public:
     size_t cols;
 
 public:
-    const Matrix& operator*=(int n);
+    Matrix& operator*=(int n);
     Row operator[](size_t row);
     const Row operator[](size_t row) const;
     bool operator==(const Matrix& other) const;

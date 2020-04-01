@@ -12,34 +12,30 @@ Matrix::Row::Row(int* matrix, size_t cols)
 
 int& Matrix::Row::operator[](size_t col)
 {
-    try {
+    if (col <= length)
         return *(array + col);
-    }
-    catch (const std::out_of_range) {
-        throw out_of_range("out of range");
-    }
+    
+    
+    throw out_of_range("out of range");
+    
 }
 
 const int Matrix::Row::operator[](size_t col) const
 {
-    try {
+    if (col <= length)
         return *(array + col);
-    }
-    catch (const std::out_of_range) {
-        throw out_of_range("out of range");
-    }
+        
+    throw out_of_range("out of range");
 }
 
 Matrix::Matrix(size_t num_rows, size_t num_cols)
     : cols(num_cols)
     , rows(num_rows)
 {
-    try {
-        matrix = (int*)(malloc(num_rows * num_cols * sizeof(int)));
-    }
-    catch (std::bad_alloc const&) {
-        matrix == nullptr;
-    }
+    
+    matrix = (int*)(malloc(num_rows * num_cols * sizeof(int)));
+    if (matrix == NULL)
+        throw bad_alloc();
 }
 
 Matrix::~Matrix()
@@ -57,7 +53,7 @@ size_t Matrix::getColumns() const
     return cols;
 }
 
-const Matrix& Matrix::operator*=(int n)
+Matrix& Matrix::operator*=(int n)
 {
     for (size_t i = 0; i < cols * rows; ++i) {
         matrix[i] = matrix[i] * n;
