@@ -8,13 +8,13 @@
 #include <vector>
 #include <condition_variable>
 
-std::atomic<int> _result;
+std::atomic<int> result;
 
-std::atomic<bool>       _end_of_read;
+std::atomic<bool>       end_of_read;
 
-std::condition_variable _cond;
-std::deque<std::string> _data;
-std::mutex              _mtx;
+std::condition_variable cond;
+std::deque<std::string> data;
+std::mutex              mtx;
 
 int sum_line(const std::string& line)
 {
@@ -31,7 +31,7 @@ int sum_line(const std::string& line)
 
 void read_file(const std::string& name)
 {
-    _end_of_read = false;
+    end_of_read = false;
 
     std::string s;
     std::ifstream file;
@@ -40,52 +40,44 @@ void read_file(const std::string& name)
     if ( !(file.is_open()) )
     {
         std::cout << name <<" not find\n";
-        _end_of_read = true;
+        end_of_read = true;
         return;
     }
 
     while(getline(file, s))
     {
-        std::unique_lock<std::mutex> lck(_mtx);
+        std::unique_lock<std::mutex> lck(mtx);
 
-        _data.push_back(s);
-        //        std::cout << s << std::endl;
-        //_cond.notify_all();
+        data.push_back(s);
     }
 
     file.close();
 
-    _end_of_read = true;
+    end_of_read = true;
 }
 
 void count_sum()
 {
     while(1)
     {
-        if( _end_of_read ) break;
+        if( end_of_read ) break;
         else
         {
-            //std::cout << "here" << std::endl;
-            std::unique_lock<std::mutex> lck(_mtx);
-            if(_data.empty() && _end_of_read) break;
+            std::unique_lock<std::mutex> lck(mtx);
+            if(data.empty() && end_of_read) break;
+            if( data.empty() ) continue;
 
-            //_cond.wait( lck, [](){ return _data.empty(); } );
-
-            if( _data.empty() ) continue;
-
-            _result += sum_line( _data.back() );
-            _data.pop_back();
+            result += sum_line( data.back() );
+            data.pop_back();
         }
     }
-    //std::cout << "end1\n";
 }
 
 int get_result()
 {
-    //std::cout << "1\n";
-    std::unique_lock<std::mutex> lck(_mtx);
-    _cond.wait( lck, [](){ return _end_of_read == true && _data.empty(); } );
-    return _result.operator int();
+    std::unique_lock<std::mutex> lck(mtx);
+    cond.wait( lck, [](){ return end_of_read == true && data.empty(); } );
+    return result.operator int();
 }
 int main()
 {
@@ -94,11 +86,8 @@ int main()
     std::thread t2( count_sum );
     std::thread t3( count_sum );
     t1.join();
-    //std::cout << "111\n";
     t2.join();
-    //std::cout << "122\n";
     t3.join();
-    //std::cout << "133\n";
 
     std::cout << get_result();
     return 0;
