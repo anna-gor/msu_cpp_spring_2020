@@ -7,13 +7,7 @@
 #include <condition_variable>
 #include <queue>
 #include <functional>
-#include <fstream>
-#include <string>
-#include <iterator>
-#include <algorithm>
-#include <sys/stat.h>
 
-int sort(const std::string& file_to_sort);
 
 class ThreadPool
 {

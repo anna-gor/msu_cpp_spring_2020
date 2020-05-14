@@ -1,19 +1,21 @@
 CC=g++ -std=c++14
 
-all: pool
+all: sort
 
-pool: test.o pool.o
-	$(CC) -pthread test.o pool.o -o pool
+sort: test.o sort.o pool.o
+	$(CC) -pthread test.o sort.o pool.o -o sort 
 
-test: pool
-	./pool
+test: sort
+	./sort
 
-test.o: test.cpp pool.h
+test.o: test.cpp sort.h pool.h
 	$(CC) -c -pthread test.cpp
 
+sort.o: sort.cpp sort.h pool.h
+	$(CC) -c -pthread sort.cpp
 
-pool.o:  pool.h
+pool.o: sort.cpp sort.h pool.h
 	$(CC) -c -pthread pool.cpp
 
 clean:
-	rm -rf *.o pool
+	rm -rf *.o sort
